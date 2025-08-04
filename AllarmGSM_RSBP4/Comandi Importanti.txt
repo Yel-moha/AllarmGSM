@@ -1,0 +1,68 @@
+* sudo minicom -D /dev/ttyAMA0 -    // Per l'avvio di minicom setta sulla porta seriale ttyAMA0, e testare i comandi at (ad esempio at,...).
+
+* sudo lsof /dev/ttyAMA0 // Controlla se la porta seriale /dev/ttyAMA0 è ancora bloccata da un altro processo
+
+* sudo killall <process_name>    // Se un processo sta utilizzando la porta, puoi 
+interromperlo
+
+* sudo systemctl stop ModemManager //A volte, il servizio ModemManager può interferire con la comunicazione seriale. Puoi disabilitarlo temporaneamente
+
+* sudo minicom -s // Se la configurazione è errata, potresti dover riconfigurare Minicom:
+
+*  ip pubblico operatore tim 62.19.110.244
+
+*sudo nano /boot/config.txt  // file di configurazione di raspi-config o config.txt.
+
+*ssh pi@192.168.140.67  // connessione remota ssh
+
+*sudo nano /etc/systemd/system/gpio-high.service  //Configurazione per l'Esecuzione Automatica
+Crea un file di servizio systemd: Questo approccio garantisce che il tuo script venga eseguito all'avvio del sistema.
+
+*sudo raspi-config // comando per aprire il Raspberry Pi Software configuration tool
+
+*sudo nano /etc/rc.local // 
+
+*sudo systemctl disable rc-local.service
+
+
+*************************************************************************************************
+Rislozione di problemi relativi interfaccia grafica
+
+# 1. Verifica che lightdm non sia bloccato e riavvialo con un ritardo
+sudo systemctl stop lightdm
+sleep 5
+sudo systemctl start lightdm
+
+# 2. Controlla e ripristina il file di configurazione di lightdm
+sudo nano /etc/lightdm/lightdm.conf  # Verifica la configurazione
+sudo rm /etc/lightdm/lightdm.conf    # Rimuovi la configurazione (se necessario)
+sudo apt-get install --reinstall lightdm  # Reinstalla lightdm
+
+# 3. Controlla i log di lightdm per trovare indizi sugli errori
+cat /var/log/lightdm/lightdm.log
+
+# 4. Imposta lightdm come display manager predefinito
+sudo dpkg-reconfigure lightdm
+
+# 5. Disabilita e riabilita il servizio lightdm
+sudo systemctl disable lightdm
+sudo systemctl enable lightdm
+
+# 6. Verifica e reinstalla le dipendenze necessarie per il funzionamento di lightdm
+sudo apt-get install --reinstall xserver-xorg-core xserver-xorg xinit
+
+# 7. (Opzionale) Installa un altro display manager per testare se il problema è specifico di lightdm
+sudo apt-get install gdm3
+
+# 8. Aggiorna il sistema e ripara eventuali pacchetti danneggiati
+sudo apt-get update
+sudo apt-get upgrade
+sudo apt-get --fix-broken install
+
+# 9. Riavvia il sistema per applicare tutte le modifiche
+sudo reboot
+
+***********************************************************************************************************
+
+
+

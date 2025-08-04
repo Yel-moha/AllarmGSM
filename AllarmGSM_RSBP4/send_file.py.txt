@@ -1,0 +1,50 @@
+import subprocess
+import time
+import serial
+
+# Configura i parametri della connessione seriale
+SERIAL_PORT = '/dev/ttyAMA0'  # Assicurati che questa sia la porta giusta per il tuo modulo
+BAUD_RATE = 115200
+
+def send_at_command(command, delay=2):
+    """Invia un comando AT e attende una risposta."""
+    ser.write((command + '\r\n').encode())
+    time.sleep(delay)
+    response = ser.read_all().decode()
+    print(f"Response for '{command}':\n{response}")
+    return response
+
+def configure_modem():
+    """Configura il modem per connettersi a Internet."""
+    send_at_command('AT')  # Test del modem
+    send_at_command('AT+CGDCONT=1,"IP","your_apn"')  # Imposta il contesto APN
+    send_at_command('AT+CGACT=1,1')  # Attiva il contesto APN
+    send_at_command('AT+CGPADDR=1')  # Ottieni l'indirizzo IP
+    send_at_command('AT+CSQ')  # Verifica la qualità del segnale
+
+def upload_file(file_path, remote_path):
+    """Carica un file su Dropbox usando Rclone."""
+    try:
+        # Comando per caricare il file su Dropbox
+        command = ['rclone', 'copy', file_path, f'rcloneFTP:/{remote_path}']
+        result = subprocess.run(command, capture_output=True, text=True)
+        if result.returncode == 0:
+            print(f"File '{file_path}' caricato con successo su '{remote_path}'.")
+        else:
+            print(f"Errore durante il caricamento del file:\n{result.stderr}")
+    except Exception as e:
+        print(f"Errore: {e}")
+
+def main():
+    global ser
+    ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1)
+    
+    try:
+        configure_modem()
+        time.sleep(10)  # Attendere un momento per assicurarsi che la connessione sia stabilita
+        upload_file('/path/to/local/file.txt', 'destination_folder/file.txt')
+    finally:
+        ser.close()
+
+if __name__ == "__main__":
+    main()

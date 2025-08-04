@@ -1,0 +1,2 @@
+Comandi linux imposrtanti,
+ssh pi@192.168.140.67  // connessione remota ssh
