@@ -1,6 +1,8 @@
 # Allarme GSM (Arduino Mega)
 
-Sistema di allarme domestico basato su Arduino Mega 2560 con display LCD 20x4 (I2C), tastiera 4x3, sensori RF 433 MHz e modulo GSM (SIM7600) per inviare SMS di notifica. La configurazione (seriale dispositivo, PIN e numero di telefono) è persistita in EEPROM. Il menu su LCD consente l’attivazione, la gestione dei sensori RF e vari test.
+Sistema di allarme domestico intelligente basato su Arduino Mega 2560 con display LCD 20x4 (I2C), tastiera 4x3, sensori RF 433 MHz e modulo GSM (SIM7600) per inviare SMS di notifica. La configurazione (seriale dispositivo, PIN e numero di telefono) è persistita in EEPROM. Il menu su LCD consente l'attivazione, la gestione dei sensori RF e vari test.
+
+![Progetto Completo](Componenti_Allarme/Immagini_Componenti/Contenitore_Esterno/Progetto_Finito_Frontale.jpeg)
 
 ## Caratteristiche principali
 - LCD 20x4 su I2C (indirizzo 0x27) per stato e menu.
@@ -14,12 +16,38 @@ Sistema di allarme domestico basato su Arduino Mega 2560 con display LCD 20x4 (I
 
 ## Hardware richiesto
 - Arduino Mega 2560 (FQBN: `arduino:avr:mega`).
+
+  ![Arduino Mega 2560](Componenti_Allarme/Immagini_Componenti/Arduino_Mega.jpg)
+
 - Modulo GSM SIM7600 collegato a `Serial1` (TX1/RX1) e al pin `POWERKEY`.
+
+  ![Modulo SIM7600](Componenti_Allarme/Immagini_Componenti/Modulo%20Sim%207600E%20Fronte.png)
+
 - LCD 20x4 I2C (PCF8574) indirizzo 0x27.
+
+  ![Display LCD I2C](Componenti_Allarme/Immagini_Componenti/Display%20LCD%20I2c_%20Fronte.jpg)
+
 - Ricevitore + trasmettitore RF 433 MHz compatibile con `RCSwitch`.
+
+  ![RF 433 MHz](Componenti_Allarme/Immagini_Componenti/RF%20433MHZ.jpg) ![Antenna RF](Componenti_Allarme/Immagini_Componenti/Antenna_RF433MHZ.jpg)
+
 - Tastiera matriciale 4x3.
-- Buzzer piezo.
-- Relè per sirena esterna.
+
+  ![Tastiera 4x3](Componenti_Allarme/Immagini_Componenti/Tastiera.jpg)
+
+- Buzzer piezo 5V.
+
+  ![Buzzer](Componenti_Allarme/Immagini_Componenti/Buzzer_5V.png)
+
+- Relè per sirena esterna (4 o 2 canali).
+
+  ![Relè 4 Canali](Componenti_Allarme/Immagini_Componenti/Modulo_Relé_4_canali.jpg)
+
+- Sensori RF 433 MHz (PIR, apertura porta, vibrazione, telecomando).
+
+  ![Sensori RF](Componenti_Allarme/Immagini_Componenti/Pir_433MHZ.jpg) ![Sensore Apertura](Componenti_Allarme/Immagini_Componenti/Sensore_Apertura_433MHZ.jpg)
+
+- Breadboard mini e cavetti Dupont.
 
 ## Pinout (principali)
 - `POWERKEY = 4`
@@ -56,17 +84,41 @@ Etichette definite in [AllarmeGSM.ino](AllarmeGSM.ino):
 
 Navigazione: `*` scorre, `#` conferma. Le funzioni operative sono implementate in [menu.ino](menu.ino) e [config.ino](config.ino).
 
+### Schermate del Menu (esempi)
+![Menu 1](Componenti_Allarme/Immagini_Componenti/Display_Options/Menu1.png)
+![Menu 2](Componenti_Allarme/Immagini_Componenti/Display_Options/Menu2.png)
+![Menu 3](Componenti_Allarme/Immagini_Componenti/Display_Options/Menu3.png)
+![Menu 4](Componenti_Allarme/Immagini_Componenti/Display_Options/Menu4.png)
+![Menu 5](Componenti_Allarme/Immagini_Componenti/Display_Options/Menu5.png)
+
+## Assemblaggio e Contenitore
+Il progetto è completo di un contenitore esterno personalizzato con fori per il passaggio dei cavi e fissaggi per i componenti.
+
+### Viste del Contenitore
+| Frontale | Interno | Laterale |
+|----------|---------|----------|
+| ![Fronte](Componenti_Allarme/Immagini_Componenti/Contenitore_Esterno/Frontale_Fissaggio.jpeg) | ![Interno](Componenti_Allarme/Immagini_Componenti/Contenitore_Esterno/Contenitore_Interno.jpg) | ![Laterale](Componenti_Allarme/Immagini_Componenti/Contenitore_Esterno/Laterale_Contenitore.jpeg) |
+
+### Base Componenti
+La base della scheda circuitale è stata personalizzata per ospitare Arduino Mega, i moduli RF, GSM e il relè.
+
+![Base Componenti Fronte](Componenti_Allarme/Immagini_Componenti/Base_Componenti_Fronte.png)
+![Base con Componenti](Componenti_Allarme/Immagini_Componenti/Base_con_componenti.png)
+
 ## File e moduli
-- [AllarmeGSM.ino](AllarmeGSM.ino): setup/loop, variabili globali, stato, inizializzazione LCD, RF, tastiera e EEPROM.
-- [gsm.ino](gsm.ino): gestione SIM7600 (`PowerOn()`, `sendATcommand()`, `SendingShortMessage()`), attivazione/disattivazione alimentazione modulo.
-- [eeprom.ino](eeprom.ino): lettura/scrittura seriale, PIN, telefono, sensori RF in EEPROM; controllo versione `VERSION = 119`.
-- [keyboard.ino](keyboard.ino): scansione tastiera, gestione PIN e transizioni di stato.
-- [lcd.ino](lcd.ino): schermate `LCDNormal()` e `LCDConfig()`.
-- [menu.ino](menu.ino): menu di configurazione e azioni (`ConfigOptions()`, `CheckKeypadMenu()`, `GetConfig()`).
-- [config.ino](config.ino): funzioni pratiche per RF e test (`TestIO()`, `SendRFCode()`, `GetRFCode()`, `DelRFCode()`).
-- [utility.ino](utility.ino): buzzer, logica allarme (`AlarmON()`, `AlarmOFF()`), SMS di attivazione/disattivazione, abilitazione RF.
-- [sketch.json](sketch.json): target board Mega 2560.
-- [launch.json](launch.json): placeholder VS Code.
+
+Il progetto è organizzato in più file `.ino`, ognuno responsabile di una funzionalità specifica:
+
+- **[AllarmeGSM.ino](AllarmeGSM.ino)**: setup/loop, variabili globali, stato, inizializzazione LCD, RF, tastiera e EEPROM. File principale del progetto.
+- **[gsm.ino](gsm.ino)**: gestione SIM7600 (`PowerOn()`, `sendATcommand()`, `SendingShortMessage()`), attivazione/disattivazione alimentazione modulo via pin POWERKEY.
+- **[eeprom.ino](eeprom.ino)**: lettura/scrittura seriale, PIN, telefono, sensori RF in EEPROM; controllo versione `VERSION = 119`.
+- **[keyboard.ino](keyboard.ino)**: scansione tastiera 4x3, gestione PIN e transizioni di stato (NORMAL ↔ CONFIG).
+- **[lcd.ino](lcd.ino)**: gestione display LCD 20x4 con schermate `LCDNormal()` (stato) e `LCDConfig()` (menu).
+- **[menu.ino](menu.ino)**: menu di configurazione e azioni (`ConfigOptions()`, `CheckKeypadMenu()`, `GetConfig()`).
+- **[config.ino](config.ino)**: funzioni pratiche per RF e test (`TestIO()`, `SendRFCode()`, `GetRFCode()`, `DelRFCode()`).
+- **[utility.ino](utility.ino)**: buzzer, logica allarme (`AlarmON()`, `AlarmOFF()`), SMS di attivazione/disattivazione, abilitazione RF.
+- **[sketch.json](sketch.json)**: configurazione target board Mega 2560.
+- **[launch.json](launch.json)**: placeholder VS Code.
 
 ## Librerie utilizzate
 - `LiquidCrystal_I2C`

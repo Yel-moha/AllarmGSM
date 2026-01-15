@@ -2,6 +2,8 @@
 
 Home alarm system based on Arduino Mega 2560 with a 20x4 I2C LCD, a 4x3 keypad, 433 MHz RF sensors, and a GSM module (SIM7600) to send SMS notifications. Configuration (device serial, PIN, phone number) is stored in EEPROM. The LCD menu lets you arm/disarm, manage RF sensors, and run tests.
 
+![Finished Project](Componenti_Allarme/Immagini_Componenti/Contenitore_Esterno/Progetto_Finito_Frontale.jpeg)
+
 ## Key Features
 - 20x4 I2C LCD (address 0x27) for status and menu.
 - 4x3 keypad for PIN entry, navigation, and configuration.
@@ -14,12 +16,38 @@ Home alarm system based on Arduino Mega 2560 with a 20x4 I2C LCD, a 4x3 keypad, 
 
 ## Required Hardware
 - Arduino Mega 2560 (FQBN: arduino:avr:mega).
+
+  ![Arduino Mega 2560](Componenti_Allarme/Immagini_Componenti/Arduino_Mega.jpg)
+
 - SIM7600 GSM module connected to `Serial1` (TX1/RX1) and `POWERKEY` pin.
+
+  ![SIM7600 Module](Componenti_Allarme/Immagini_Componenti/Modulo%20Sim%207600E%20Fronte.png)
+
 - 20x4 I2C LCD (PCF8574) at address 0x27.
+
+  ![LCD Display I2C](Componenti_Allarme/Immagini_Componenti/Display%20LCD%20I2c_%20Fronte.jpg)
+
 - RF 433 MHz receiver + transmitter compatible with `RCSwitch`.
+
+  ![RF 433 MHz](Componenti_Allarme/Immagini_Componenti/RF%20433MHZ.jpg) ![RF Antenna](Componenti_Allarme/Immagini_Componenti/Antenna_RF433MHZ.jpg)
+
 - 4x3 matrix keypad.
-- Piezo buzzer.
-- Relay for external siren.
+
+  ![4x3 Keypad](Componenti_Allarme/Immagini_Componenti/Tastiera.jpg)
+
+- Piezo buzzer 5V.
+
+  ![Buzzer](Componenti_Allarme/Immagini_Componenti/Buzzer_5V.png)
+
+- Relay module for external siren (4 or 2 channels).
+
+  ![4-Channel Relay](Componenti_Allarme/Immagini_Componenti/Modulo_Relé_4_canali.jpg)
+
+- RF 433 MHz sensors (PIR, door open, vibration, remote).
+
+  ![RF Sensors](Componenti_Allarme/Immagini_Componenti/Pir_433MHZ.jpg) ![Door Sensor](Componenti_Allarme/Immagini_Componenti/Sensore_Apertura_433MHZ.jpg)
+
+- Mini breadboard and Dupont wires.
 
 ## Pinout (main)
 - `POWERKEY = 4`
@@ -56,17 +84,41 @@ Labels defined in [AllarmeGSM.ino](AllarmeGSM.ino):
 
 Navigation: `*` scroll, `#` confirm. Operational functions are implemented in [menu.ino](menu.ino) and [config.ino](config.ino).
 
+### LCD Menu Screenshots (examples)
+![Menu 1](Componenti_Allarme/Immagini_Componenti/Display_Options/Menu1.png)
+![Menu 2](Componenti_Allarme/Immagini_Componenti/Display_Options/Menu2.png)
+![Menu 3](Componenti_Allarme/Immagini_Componenti/Display_Options/Menu3.png)
+![Menu 4](Componenti_Allarme/Immagini_Componenti/Display_Options/Menu4.png)
+![Menu 5](Componenti_Allarme/Immagini_Componenti/Display_Options/Menu5.png)
+
+## Assembly and Enclosure
+The project includes a custom external enclosure with holes for cable routing and mounting points for components.
+
+### Enclosure Views
+| Front | Interior | Side |
+|-------|----------|------|
+| ![Front](Componenti_Allarme/Immagini_Componenti/Contenitore_Esterno/Frontale_Fissaggio.jpeg) | ![Interior](Componenti_Allarme/Immagini_Componenti/Contenitore_Esterno/Contenitore_Interno.jpg) | ![Side](Componenti_Allarme/Immagini_Componenti/Contenitore_Esterno/Laterale_Contenitore.jpeg) |
+
+### Component Base
+The circuit board base has been customized to house the Arduino Mega, RF modules, GSM module, and relay.
+
+![Component Base Front](Componenti_Allarme/Immagini_Componenti/Base_Componenti_Fronte.png)
+![Base with Components](Componenti_Allarme/Immagini_Componenti/Base_con_componenti.png)
+
 ## Files & Modules
-- [AllarmeGSM.ino](AllarmeGSM.ino): setup/loop, global variables, state, LCD/RF/keypad/EEPROM initialization.
-- [gsm.ino](gsm.ino): SIM7600 control (`PowerOn()`, `sendATcommand()`, `SendingShortMessage()`), module power control.
-- [eeprom.ino](eeprom.ino): read/write serial, PIN, phone, RF sensors in EEPROM; version check `VERSION = 119`.
-- [keyboard.ino](keyboard.ino): keypad scanning, PIN handling, and state transitions.
-- [lcd.ino](lcd.ino): screens `LCDNormal()` and `LCDConfig()`.
-- [menu.ino](menu.ino): configuration menu and actions (`ConfigOptions()`, `CheckKeypadMenu()`, `GetConfig()`).
-- [config.ino](config.ino): RF and test helpers (`TestIO()`, `SendRFCode()`, `GetRFCode()`, `DelRFCode()`).
-- [utility.ino](utility.ino): buzzer, alarm logic (`AlarmON()`, `AlarmOFF()`), SMS for arm/disarm, RF enabling.
-- [sketch.json](sketch.json): target board Mega 2560.
-- [launch.json](launch.json): VS Code placeholder.
+
+The project is organized into multiple `.ino` files, each responsible for a specific functionality:
+
+- **[AllarmeGSM.ino](AllarmeGSM.ino)**: setup/loop, global variables, state management, LCD/RF/keypad/EEPROM initialization. Main project file.
+- **[gsm.ino](gsm.ino)**: SIM7600 control (`PowerOn()`, `sendATcommand()`, `SendingShortMessage()`), module power control via POWERKEY pin.
+- **[eeprom.ino](eeprom.ino)**: read/write serial, PIN, phone, RF sensors in EEPROM; version check `VERSION = 119`.
+- **[keyboard.ino](keyboard.ino)**: 4x3 keypad scanning, PIN handling, and state transitions (NORMAL ↔ CONFIG).
+- **[lcd.ino](lcd.ino)**: 20x4 LCD display management with `LCDNormal()` (status) and `LCDConfig()` (menu) screens.
+- **[menu.ino](menu.ino)**: configuration menu and actions (`ConfigOptions()`, `CheckKeypadMenu()`, `GetConfig()`).
+- **[config.ino](config.ino)**: RF utilities and testing (`TestIO()`, `SendRFCode()`, `GetRFCode()`, `DelRFCode()`).
+- **[utility.ino](utility.ino)**: buzzer, alarm logic (`AlarmON()`, `AlarmOFF()`), SMS for arm/disarm, RF enabling.
+- **[sketch.json](sketch.json)**: Arduino Mega 2560 board configuration.
+- **[launch.json](launch.json)**: VS Code placeholder.
 
 ## Libraries
 - `LiquidCrystal_I2C`
